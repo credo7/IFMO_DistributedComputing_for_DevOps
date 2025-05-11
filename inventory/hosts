@@ -1,2 +1,2 @@
 [wordpress_servers]
-89.104.70.174 ansible_user=root ansible_ssh_pass=eTxibDChjQejzWAD ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+ip_address ansible_user=username ansible_ssh_pass=password ansible_ssh_common_args='-o StrictHostKeyChecking=no'
