@@ -1,0 +1,15 @@
+- name: Create PostgreSQL cluster using docker-compose
+  file:
+    path: "/opt/postgres"
+    state: directory
+
+- name: Deploy PostgreSQL cluster
+  template:
+    src: docker-compose.yml.j2
+    dest: /opt/postgres/docker-compose.yml
+
+- name: Start PostgreSQL cluster
+  community.docker.docker_compose_v2:
+    project_src: /opt/postgres
+    state: present
+    recreate: always

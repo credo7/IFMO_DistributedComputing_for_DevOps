@@ -1,0 +1,21 @@
+- name: Install required packages
+  apt:
+    name:
+      - ufw
+    state: present
+    update_cache: yes
+
+- name: Allow necessary ports in UFW
+  ufw:
+    rule: allow
+    port: "{{ item }}"
+    proto: tcp
+  loop:
+    - "80"
+    - "443"
+    - "22"
+  notify: Reload UFW
+
+- name: Ensure UFW is enabled
+  ufw:
+    state: enabled

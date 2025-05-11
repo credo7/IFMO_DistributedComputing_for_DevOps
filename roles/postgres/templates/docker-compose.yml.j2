@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  postgres-primary:
+    image: bitnami/postgresql:15
+    container_name: postgres-primary
+    restart: always
+    environment:
+      - POSTGRESQL_REPLICATION_MODE=master
+      - POSTGRESQL_REPLICATION_USER={{ postgres_replica_user }}
+      - POSTGRESQL_REPLICATION_PASSWORD={{ postgres_replica_password }}
+      - POSTGRESQL_USERNAME={{ postgres_user }}
+      - POSTGRESQL_PASSWORD={{ postgres_password }}
+      - POSTGRESQL_DATABASE={{ postgres_db }}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_primary_data:/bitnami/postgresql
+    networks:
+      - wp_net
+
+  postgres-replica:
+    image: bitnami/postgresql:15
+    container_name: postgres-replica
+    restart: always
+    environment:
+      - POSTGRESQL_REPLICATION_MODE=slave
+      - POSTGRESQL_REPLICATION_USER={{ postgres_replica_user }}
+      - POSTGRESQL_REPLICATION_PASSWORD={{ postgres_replica_password }}
+      - POSTGRESQL_MASTER_HOST=postgres-primary
+      - POSTGRESQL_USERNAME={{ postgres_user }}
+      - POSTGRESQL_PASSWORD={{ postgres_password }}
+    depends_on:
+      - postgres-primary
+    volumes:
+      - pg_replica_data:/bitnami/postgresql
+    networks:
+      - wp_net
+
+volumes:
+  pg_primary_data:
+  pg_replica_data:
+
+networks:
+  wp_net:
+    external: true

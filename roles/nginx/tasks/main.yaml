@@ -1,0 +1,16 @@
+- name: Generate private key for SSL
+  openssl_privatekey:
+    path: /etc/ssl/wordpress/privkey.pem
+    size: 2048
+    mode: '0600'
+
+- name: Generate self-signed SSL cert via OpenSSL CLI
+  command: >
+    openssl req -x509 -nodes -days 3650
+      -newkey rsa:2048
+      -keyout /etc/ssl/wordpress/privkey.pem
+      -out /etc/ssl/wordpress/fullchain.pem
+      -subj "/CN=localhost"
+  args:
+    creates: /etc/ssl/wordpress/fullchain.pem
+

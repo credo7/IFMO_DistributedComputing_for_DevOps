@@ -1,0 +1,41 @@
+- name: Remove legacy docker-compose if installed
+  apt:
+    name: docker-compose
+    state: absent
+  ignore_errors: true
+
+- name: Create Docker CLI plugins directory
+  file:
+    path: /usr/local/lib/docker/cli-plugins
+    state: directory
+    mode: '0755'
+    recurse: true
+
+- name: Download Docker Compose V2
+  get_url:
+    url: https://github.com/docker/compose/releases/download/v2.24.4/docker-compose-linux-x86_64
+    dest: /usr/local/lib/docker/cli-plugins/docker-compose
+    mode: '0755'
+
+- name: Install Docker and Compose
+  apt:
+    name:
+      - docker.io
+      - docker-compose
+    state: present
+    update_cache: yes
+
+- name: Enable and start Docker service
+  systemd:
+    name: docker
+    enabled: true
+    state: started
+
+- name: Ensure external Docker network 'wp_net' exists
+  community.docker.docker_network:
+    name: wp_net
+    state: present
+    driver: bridge
+    scope: local
+    internal: false
+    enable_ipv6: false
