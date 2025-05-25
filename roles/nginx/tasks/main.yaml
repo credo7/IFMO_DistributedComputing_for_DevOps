@@ -1,16 +1,26 @@
+- name: Create Nginx directories
+  file:
+    path: /opt/wordpress
+    state: directory
+    mode: '0755'
+
 - name: Generate private key for SSL
-  openssl_privatekey:
+  community.crypto.openssl_privatekey:
     path: /etc/ssl/wordpress/privkey.pem
     size: 2048
     mode: '0600'
 
-- name: Generate self-signed SSL cert via OpenSSL CLI
-  command: >
-    openssl req -x509 -nodes -days 3650
-      -newkey rsa:2048
-      -keyout /etc/ssl/wordpress/privkey.pem
-      -out /etc/ssl/wordpress/fullchain.pem
-      -subj "/CN=localhost"
-  args:
-    creates: /etc/ssl/wordpress/fullchain.pem
+- name: Generate a certificate signing request (CSR)
+  community.crypto.openssl_csr:
+    path: /etc/ssl/wordpress/req.csr
+    privatekey_path: /etc/ssl/wordpress/privkey.pem
+    common_name: "localhost"
 
+- name: Generate self-signed SSL certificate
+  community.crypto.x509_certificate:
+    path: /etc/ssl/wordpress/fullchain.pem
+    csr_path: /etc/ssl/wordpress/req.csr
+    privatekey_path: /etc/ssl/wordpress/privkey.pem
+    provider: selfsigned
+    selfsigned_not_after: "+3650d"
+    mode: '0644'

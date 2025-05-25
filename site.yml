@@ -9,11 +9,12 @@
       changed_when: false
 
 - name: Setup WordPress Platform
-  hosts: all
+  hosts: all         # <----- Remove the dash!
   become: true
   roles:
     - common
     - docker
     - postgres
-    - wordpress
     - nginx
+    - wordpress
+    - monitoring
