@@ -11,9 +11,14 @@
     port: "{{ item }}"
     proto: tcp
   loop:
-    - "80"
-    - "443"
-    - "22"
+    - "80"     # HTTP
+    - "443"    # HTTPS
+    - "22"     # SSH
+    - "3000"   # Grafana
+    - "9090"   # Prometheus
+    - "9100"   # Node Exporter
+    - "9113"   # Nginx Exporter
+    - "9187"   # PostgreSQL Exporter
   notify: Reload UFW
 
 - name: Ensure UFW is enabled

@@ -4,10 +4,32 @@
     state: directory
     mode: '0755'
 
+- name: Create Grafana provisioning directories
+  file:
+    path: "{{ monitoring_path }}/grafana/{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - provisioning/datasources
+    - provisioning/dashboards
+    - dashboards
+
 - name: Copy prometheus config
   template:
     src: prometheus.yml.j2
     dest: "{{ monitoring_path }}/prometheus.yml"
+    mode: '0644'
+
+- name: Copy Grafana datasource config
+  template:
+    src: grafana-datasources.yml.j2
+    dest: "{{ monitoring_path }}/grafana/provisioning/datasources/datasources.yml"
+    mode: '0644'
+
+- name: Copy Grafana dashboard config
+  template:
+    src: grafana-dashboards.yml.j2
+    dest: "{{ monitoring_path }}/grafana/provisioning/dashboards/dashboards.yml"
     mode: '0644'
 
 - name: Copy Docker Compose file for monitoring
