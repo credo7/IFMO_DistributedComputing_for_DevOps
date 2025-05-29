@@ -4,6 +4,12 @@
     state: directory
     mode: '0755'
 
+- name: Create SSL certificate directory
+  file:
+    path: /etc/ssl/wordpress
+    state: directory
+    mode: '0755'
+
 - name: Generate private key for SSL
   community.crypto.openssl_privatekey:
     path: /etc/ssl/wordpress/privkey.pem
