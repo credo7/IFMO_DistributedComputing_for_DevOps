@@ -32,6 +32,30 @@
     dest: "{{ monitoring_path }}/grafana/provisioning/dashboards/dashboards.yml"
     mode: '0644'
 
+- name: Download Node Exporter dashboard
+  get_url:
+    url: "https://grafana.com/api/dashboards/1860/revisions/37/download"
+    dest: "{{ monitoring_path }}/grafana/dashboards/node-exporter.json"
+    mode: '0644'
+
+- name: Download PostgreSQL dashboard
+  get_url:
+    url: "https://grafana.com/api/dashboards/9628/revisions/7/download"
+    dest: "{{ monitoring_path }}/grafana/dashboards/postgres.json"
+    mode: '0644'
+
+- name: Download Nginx dashboard
+  get_url:
+    url: "https://grafana.com/api/dashboards/12708/revisions/1/download"
+    dest: "{{ monitoring_path }}/grafana/dashboards/nginx.json"
+    mode: '0644'
+
+- name: Download Docker dashboard
+  get_url:
+    url: "https://grafana.com/api/dashboards/179/revisions/7/download"
+    dest: "{{ monitoring_path }}/grafana/dashboards/docker.json"
+    mode: '0644'
+
 - name: Copy Docker Compose file for monitoring
   template:
     src: docker-compose.yml.j2
